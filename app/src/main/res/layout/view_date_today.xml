@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="1.0">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#abcdef"
+        android:layout_weight="0.80">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="MMM DD, YYYY"
+            android:id="@+id/tvDateEnglish"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:textSize="27sp"
+            android:textStyle="bold"
+            android:typeface="serif"
+            android:padding="3dp"
+            android:paddingTop="5dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Ramadan 15, 1434"
+            android:id="@+id/textView4"
+            android:layout_gravity="center_horizontal"
+            android:padding="3dp"
+            android:textStyle="bold"
+            android:typeface="serif"
+            android:textSize="20sp"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#dcedc8"
+        android:layout_weight="0.20">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:id="@+id/ll_upper">
+
+            <!--<include layout="@layout/single_view"/>-->
+
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="6dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Maghrib"
+            android:textSize="20sp"
+            android:id="@+id/sv_tv_prayerName"
+            android:typeface="serif"
+            android:paddingLeft="2dp"
+            android:paddingRight="2dp"
+            android:layout_gravity="center"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="06:37 PM"
+            android:textSize="20sp"
+            android:id="@+id/sv_tv_prayerTime"
+            android:typeface="serif"
+            android:textStyle="bold"
+            android:paddingLeft="3dp"
+            android:layout_gravity="center"
+            android:layout_alignBottom="@+id/sv_tv_prayerName"
+            android:layout_centerHorizontal="true" />
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:id="@+id/sv_iv_alarmIcon"
+            android:src="@drawable/ic_alarm"
+            android:layout_alignBottom="@+id/sv_tv_prayerName"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="icon" />
+    </RelativeLayout>
+
+    <View
+        android:layout_marginLeft="7dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginTop="3dp"
+        android:id="@+id/separator"
+        android:background="#424242"
+        android:layout_width = "fill_parent"
+        android:layout_height="0.5dip"/>
+</LinearLayout>
