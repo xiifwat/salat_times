@@ -1,6 +1,7 @@
 package com.gmail.xiifwat.salattimes.library;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -113,7 +114,7 @@ public class TimeTableAdapter extends PagerAdapter
         return singleView;
     }
 
-    private void launchTimePickerDialog(int hour, int minutes, final String prayerName) {
+    private void launchTimePickerDialogOld(int hour, int minutes, final String prayerName) {
 
         final int[] alarmTime = new int[2];
 
@@ -121,6 +122,7 @@ public class TimeTableAdapter extends PagerAdapter
                 = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                Log.d(LOGTAG, "OnTimeSet Hour: " + hourOfDay+ " Minute: " + minute);
                 alarmTime[0] = hourOfDay;
                 alarmTime[1] = minute;
             }
@@ -141,7 +143,8 @@ public class TimeTableAdapter extends PagerAdapter
                         Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM)
                                 .putExtra(AlarmClock.EXTRA_MESSAGE, prayerName)
                                 .putExtra(AlarmClock.EXTRA_HOUR, alarmTime[0])
-                                .putExtra(AlarmClock.EXTRA_MINUTES, alarmTime[1]);
+                                .putExtra(AlarmClock.EXTRA_MINUTES, alarmTime[1])
+                                .putExtra(AlarmClock.EXTRA_SKIP_UI, true);
                         if (intent.resolveActivity(_activity.getPackageManager()) != null) {
                             _activity.startActivity(intent);
                         }
@@ -156,6 +159,44 @@ public class TimeTableAdapter extends PagerAdapter
         });
 
         tpd.show();
+    }
+
+
+    private void launchTimePickerDialog(int hour, int minutes, final String prayerName) {
+
+        final TimePicker timePicker = new TimePicker(_activity);
+        timePicker.setIs24HourView(false);
+        timePicker.setCurrentHour(hour);
+        timePicker.setCurrentMinute(minutes);
+
+        new AlertDialog.Builder(_activity)
+                .setTitle("Set alarm for " + prayerName)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Log.d(LOGTAG, timePicker.getCurrentHour() + ":"
+                                + timePicker.getCurrentMinute());
+                        // Set alarm using alarm intent
+                        Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM)
+                                .putExtra(AlarmClock.EXTRA_MESSAGE, prayerName)
+                                .putExtra(AlarmClock.EXTRA_HOUR, timePicker.getCurrentHour())
+                                .putExtra(AlarmClock.EXTRA_MINUTES, timePicker.getCurrentMinute())
+                                .putExtra(AlarmClock.EXTRA_SKIP_UI, true);
+                        if (intent.resolveActivity(_activity.getPackageManager()) != null) {
+                            _activity.startActivity(intent);
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog,
+                                                int which) {
+//                                Log.d(LOGTAG, "Cancelled!");
+                            }
+                        }).setView(timePicker).show();
     }
 
     // ---- METHODS FOR OnPageChangeListener

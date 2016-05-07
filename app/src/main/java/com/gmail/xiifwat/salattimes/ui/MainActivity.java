@@ -92,6 +92,9 @@ public class MainActivity extends ActionBarActivity {
 
     private class GetLocationName extends AsyncTask<String,String,String> {
 
+        // Reverse Geocoding in needed to get address from coordinates
+        // https://developers.google.com/maps/documentation/geocoding/intro#ReverseGeocoding
+
         double latitude, longitude;
 
         public GetLocationName(double latitude, double longitude) {
