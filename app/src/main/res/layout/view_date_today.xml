@@ -7,43 +7,44 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="#abcdef"
-        android:layout_weight="0.80">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary1"
+        android:paddingBottom="3dp">
+
+        <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="MMM DD, YYYY"
+        android:id="@+id/tvDateEnglish"
+        android:layout_gravity="center_horizontal|center_vertical"
+        android:textSize="27sp"
+        android:textStyle="bold"
+        android:typeface="serif"
+        android:padding="3dp"
+        android:paddingTop="5dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="MMM DD, YYYY"
-            android:id="@+id/tvDateEnglish"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="day of week"
+            android:id="@+id/tvDayOfWeek"
             android:layout_gravity="center_horizontal|center_vertical"
-            android:textSize="27sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:typeface="serif"
             android:padding="3dp"
             android:paddingTop="5dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Ramadan 15, 1434"
-            android:id="@+id/textView4"
-            android:layout_gravity="center_horizontal"
-            android:padding="3dp"
-            android:textStyle="bold"
-            android:typeface="serif"
-            android:textSize="20sp"
-            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="#dcedc8"
+        android:background="@color/colorPrimary2"
         android:layout_weight="0.20">
 
         <LinearLayout

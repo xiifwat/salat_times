@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorToolbar">#424242</color>
+    <color name="colorBackground">#cdcdcd</color>
+    <color name="colorPrimary1">#abcdef</color>
+    <color name="colorPrimary2">#dcedc8</color>
+
+</resources>

@@ -77,7 +77,6 @@ public class GPSTracker
 
 	@Override
 	public void onLocationChanged(Location location) {
-		//TODO store to db. or fire event
 		listener.onLocatinoFound(location.getLatitude(), location.getLongitude());
 	}
 

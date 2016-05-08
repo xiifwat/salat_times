@@ -56,6 +56,9 @@ public class TimeTableAdapter extends PagerAdapter
         TextView tvDateEnglish = (TextView) view.findViewById(R.id.tvDateEnglish);
         tvDateEnglish.setText(_data.get(position).getDateEnglish());
 
+        TextView tvDayOfWeek = (TextView) view.findViewById(R.id.tvDayOfWeek);
+        tvDayOfWeek.setText(_data.get(position).getDayOfWeek());
+
 
         LinearLayout llUpper = (LinearLayout) view.findViewById(R.id.ll_upper);
 

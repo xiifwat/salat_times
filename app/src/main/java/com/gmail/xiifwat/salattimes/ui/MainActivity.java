@@ -2,11 +2,10 @@ package com.gmail.xiifwat.salattimes.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.location.Address;
-import android.location.Geocoder;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,27 +18,21 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.gmail.xiifwat.salattimes.R;
 import com.gmail.xiifwat.salattimes.database.DataSource;
 import com.gmail.xiifwat.salattimes.library.GPSTracker;
-import com.gmail.xiifwat.salattimes.library.Georesponse.AddressComponent;
-import com.gmail.xiifwat.salattimes.library.Georesponse.GeocodeResponse;
 import com.gmail.xiifwat.salattimes.library.Utility;
 import com.gmail.xiifwat.salattimes.library.VolleySingleton;
-import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Locale;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends AppCompatActivity {
 
     private String LOGTAG = "tfx_" + MainActivity.class.getSimpleName();
     private GPSTracker.MyLocationListener listener;
     private GPSTracker gps;
 
+    //TODO cut api key before every commit
     private final String API_KEY = "";
 
 
@@ -47,6 +40,9 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -79,6 +75,7 @@ public class MainActivity extends ActionBarActivity {
 
             if(utility.getDataConnectionStatus() && utility.getLocationServiceStatus()) {
                 gps = new GPSTracker(MainActivity.this, listener);
+                showSnackbar("Please wait");
             }
             else {
                 new AlertDialog.Builder(this)
@@ -112,31 +109,36 @@ public class MainActivity extends ActionBarActivity {
                         ArrayList<String> address = new Utility().getAddress(response.toString());
 
                         if(address==null) {
-                            // TODO user response
-                        } else {
-                            Log.d(LOGTAG, address.get(0) + " :: " + address.get(1));
-
-                            // save to database
-                            DataSource dataSource = new DataSource(MainActivity.this);
-                            dataSource.open();
-                            dataSource.insertToLocation(latitude,
-                                    longitude, address.get(0), address.get(1));
-                            dataSource.close();
-
-                            // update ui
-                            getSupportFragmentManager()
-                                    .beginTransaction()
-                                    .replace(R.id.content_frame,new MainActivityFragment(), "tfx")
-                                    .commit();
+                            // inform user
+                            showSnackbar("Error updating location");
+                            return;
                         }
+
+                        Log.d(LOGTAG, address.get(0) + " :: " + address.get(1));
+
+                        // save to database
+                        DataSource dataSource = new DataSource(MainActivity.this);
+                        dataSource.open();
+                        dataSource.insertToLocation(latitude,
+                                longitude, address.get(0), address.get(1));
+                        dataSource.close();
+
+                        // update ui
+                        getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.content_frame, new MainActivityFragment(), "tfx")
+                                .commit();
+
+                        // inform user
+                        showSnackbar("Location successfully updated!!");
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                VolleyLog.d(LOGTAG, "Error: " + error.getMessage());
-//						hideProgressDialog();
+                Log.d(LOGTAG, "Error: " + error.getMessage());
+                showSnackbar("Error updating location");
             }
         });
 
@@ -146,5 +148,10 @@ public class MainActivity extends ActionBarActivity {
 
         // Cancelling request
         // ApplicationController.getInstance().getRequestQueue().cancelAll(tag_json_obj);
+    }
+
+    private void showSnackbar(String msg) {
+        Snackbar.make(findViewById(R.id.content_frame), msg,
+                Snackbar.LENGTH_LONG).show();
     }
 }

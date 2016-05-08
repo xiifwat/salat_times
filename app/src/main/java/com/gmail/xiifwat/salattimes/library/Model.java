@@ -10,7 +10,7 @@ public class Model {
     private String ishaaTime;
 
     private String dateEnglish;
-    private String dateArabic;
+    private String dayOfWeek;
 
     private boolean isFajrAlarmSet;
     private boolean isSunriseAlarmSet;
@@ -20,7 +20,7 @@ public class Model {
     private boolean isIshaaAlarmSet;
 
     public Model(String fajrTime, String sunriseTime, String duhrTime, String asrTime,
-                 String maghribTime, String ishaaTime, String dateEnglish, String dateArabic) {
+                 String maghribTime, String ishaaTime, String dateEnglish, String dayOfWeek) {
         this.fajrTime = fajrTime;
         this.sunriseTime = sunriseTime;
         this.duhrTime = duhrTime;
@@ -28,7 +28,7 @@ public class Model {
         this.maghribTime = maghribTime;
         this.ishaaTime = ishaaTime;
         this.dateEnglish = dateEnglish;
-        this.dateArabic = dateArabic;
+        this.dayOfWeek = dayOfWeek;
     }
 
     public String getFajrTime() {
@@ -87,12 +87,12 @@ public class Model {
         this.dateEnglish = dateEnglish;
     }
 
-    public String getDateArabic() {
-        return dateArabic;
+    public String getDayOfWeek() {
+        return dayOfWeek;
     }
 
-    public void setDateArabic(String dateArabic) {
-        this.dateArabic = dateArabic;
+    public void setDayOfWeek(String dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
     public boolean isFajrAlarmSet() {

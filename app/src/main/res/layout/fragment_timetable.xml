@@ -2,15 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="10dp"
-    android:paddingLeft="10dp"
-    android:paddingRight="10dp"
-    android:paddingTop="10dp">
+    android:padding="3dp">
 
     <LinearLayout
         android:id="@+id/ll_locationName"
         android:padding="10dp"
-        android:background="#abcdef"
+        android:background="@color/colorPrimary1"
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content">
@@ -35,6 +32,7 @@
             android:id="@+id/tvCountry"
             android:layout_gravity="center_horizontal"
             android:textSize="20sp"
+            android:textColor="#000"
             android:textStyle="bold"
             android:typeface="serif" />
     </LinearLayout>
@@ -44,7 +42,6 @@
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:background="#ff5df3b8" />
+        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>
