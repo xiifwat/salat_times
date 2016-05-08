@@ -4,6 +4,14 @@ import android.content.Context;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
+
+import com.gmail.xiifwat.salattimes.library.Georesponse.AddressComponent;
+import com.gmail.xiifwat.salattimes.library.Georesponse.GeocodeResponse;
+import com.google.gson.Gson;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class Utility {
 
@@ -12,6 +20,8 @@ public class Utility {
     public Utility(Context _context) {
         this._context = _context;
     }
+
+    public Utility(){}
 
     public boolean getDataConnectionStatus() {
 
@@ -29,5 +39,40 @@ public class Utility {
         boolean statusOfGPS = manager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
         return statusOfGPS;
+    }
+
+    public String getReverseGeolocationUrl(double latitude, double longitude, String apiKey) {
+
+        return "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+                String.valueOf(latitude) + "," + String.valueOf(longitude) +
+                "&key=" + apiKey;
+    }
+
+    public ArrayList<String> getAddress(String jsonResponse) {
+
+        ArrayList<String> address = new ArrayList<>();
+
+        GeocodeResponse geocodeResponse =
+                new Gson().fromJson(jsonResponse, GeocodeResponse.class);
+
+        if(!geocodeResponse.getStatus().equalsIgnoreCase("ok")) {
+            // problem getting response from google API
+            return null;
+        }
+
+        Collection<AddressComponent> x =
+                geocodeResponse.getResults().get(0).getAddress_components();
+        for (AddressComponent ac : x) {
+
+            for(String s : ac.getTypes()) {
+                if(s.equalsIgnoreCase("country")) {
+                    address.add(ac.getLong_name());
+                } else if(s.equalsIgnoreCase("administrative_area_level_2")) {
+                    address.add(ac.getLong_name());
+                }
+            }
+        }
+
+        return address;
     }
 }

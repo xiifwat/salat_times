@@ -38,13 +38,10 @@ public class MainActivityFragment extends Fragment {
 
         DataSource dataSource = new DataSource(getActivity());
         dataSource.open();
-        dataSource.insertToLocation();
+        dataSource.setDefaultLocation();
 
         List<String> list = dataSource.getLocationName();
 
-//        for( int k = 0; k< list.size(); k++) {
-//            Log.d("tfx", "- " + list.get(k));
-//        }
         dataSource.close();
 
         tvCity.setText(list.get(1).toUpperCase());
@@ -61,12 +58,4 @@ public class MainActivityFragment extends Fragment {
 
         return view;
     }
-
-//    public void setCountryNameTextView(String s) {
-//        tvCountry.setText(list.get(0));
-//    }
-//
-//    public void setCountryNameTextView(String s) {
-//
-//    }
 }

@@ -1,7 +1,6 @@
 package com.gmail.xiifwat.salattimes.library;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.gmail.xiifwat.salattimes.database.DataSource;
 
@@ -26,7 +25,7 @@ public class NextThreeDays {
 
         DataSource dataSource = new DataSource(context);
         dataSource.open();
-        dataSource.insertToLocation();
+        dataSource.setDefaultLocation();
 
         List<Double> list = dataSource.getLocationCoordinates();
         dataSource.close();

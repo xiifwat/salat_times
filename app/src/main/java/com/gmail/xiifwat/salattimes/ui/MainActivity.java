@@ -1,12 +1,7 @@
 package com.gmail.xiifwat.salattimes.ui;
 
-import android.app.ActionBar;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.AsyncTask;
@@ -16,23 +11,36 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.VolleyLog;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.gmail.xiifwat.salattimes.R;
 import com.gmail.xiifwat.salattimes.database.DataSource;
 import com.gmail.xiifwat.salattimes.library.GPSTracker;
+import com.gmail.xiifwat.salattimes.library.Georesponse.AddressComponent;
+import com.gmail.xiifwat.salattimes.library.Georesponse.GeocodeResponse;
 import com.gmail.xiifwat.salattimes.library.Utility;
+import com.gmail.xiifwat.salattimes.library.VolleySingleton;
+import com.google.gson.Gson;
+
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
 
 public class MainActivity extends ActionBarActivity {
 
-    private SharedPreferences sharedPref;
     private String LOGTAG = "tfx_" + MainActivity.class.getSimpleName();
     private GPSTracker.MyLocationListener listener;
     private GPSTracker gps;
+
+    private final String API_KEY = "";
 
 
     @Override
@@ -40,19 +48,19 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(R.id.content_frame,new MainActivityFragment(), "tfx")
+                .commit();
+
         listener = new GPSTracker.MyLocationListener() {
             @Override
             public void onLocatinoFound(double latitude, double longitude) {
                 Log.d(LOGTAG, "got coordinates from GPS");
-                new GetLocationName(latitude, longitude).execute();
+                gps.disconnect();
+                makeJsonObjReq(latitude, longitude);
             }
         };
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        sharedPref = getSharedPreferences("SalatTimesSharedPref", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -90,75 +98,53 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class GetLocationName extends AsyncTask<String,String,String> {
+    //-----------------------------------------------------------
+    private void makeJsonObjReq(final double latitude, final double longitude) {
 
-        // Reverse Geocoding in needed to get address from coordinates
-        // https://developers.google.com/maps/documentation/geocoding/intro#ReverseGeocoding
+        String url = new Utility().getReverseGeolocationUrl(latitude, longitude, API_KEY);
 
-        double latitude, longitude;
+        final JsonObjectRequest jsonObjReq = new JsonObjectRequest(Request.Method.GET,
+                url, new Response.Listener<JSONObject>() {
 
-        public GetLocationName(double latitude, double longitude) {
-//            this.latitude = latitude;
-            this.latitude = 74.0059;
-//            this.longitude = longitude;
-            this.longitude = 40.7128;
-        }
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        //						hideProgressDialog();
+                        ArrayList<String> address = new Utility().getAddress(response.toString());
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //TODO showProgressDialog
-        }
+                        if(address==null) {
+                            // TODO user response
+                        } else {
+                            Log.d(LOGTAG, address.get(0) + " :: " + address.get(1));
 
-        @Override
-        protected String doInBackground(String... params) {
+                            // save to database
+                            DataSource dataSource = new DataSource(MainActivity.this);
+                            dataSource.open();
+                            dataSource.insertToLocation(latitude,
+                                    longitude, address.get(0), address.get(1));
+                            dataSource.close();
 
-            List<String> locName = getLocationName(latitude, longitude);
+                            // update ui
+                            getSupportFragmentManager()
+                                    .beginTransaction()
+                                    .replace(R.id.content_frame,new MainActivityFragment(), "tfx")
+                                    .commit();
+                        }
+                    }
+                }, new Response.ErrorListener() {
 
-            Log.d(LOGTAG, "lat:"+latitude+"long:"+longitude+"city:"+locName.get(0)+"con:"+locName.get(1));
+            @Override
+            public void onErrorResponse(VolleyError error) {
 
-            DataSource dataSource = new DataSource(MainActivity.this);
-            dataSource.open();
-            dataSource.insertToLocation(latitude, longitude, locName.get(0), locName.get(1));
-            dataSource.close();
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            //TODO hideProgressDialog
-            gps.disconnect();
-        }
-
-        /**
-         * This function get location name using Internet
-         * from fetched coordinates
-         * TODO modification and error checking needed
-         **/
-        public List<String> getLocationName(double latitude, double longitude) {
-
-            List<String> locationName = new ArrayList<>();
-
-            Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
-            try {
-                List<Address> listAddresses = geocoder.getFromLocation(latitude, longitude, 1);
-
-                if (listAddresses != null && listAddresses.size() > 0) {
-                    Address adrs = listAddresses.get(0);
-
-                    locationName.add(adrs.getLocality()); // district name
-                    locationName.add(adrs.getCountryName()); // country name
-//            	for(int i=0; i<listAddresses.size(); i++)
-//            		locationName.append(listAddresses.get(0).getAddressLine(i) + "\n");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                locationName.add("Internet access needed to get location name");
+                VolleyLog.d(LOGTAG, "Error: " + error.getMessage());
+//						hideProgressDialog();
             }
+        });
 
-            return locationName;
-        }
+        // Adding request to request queue
+        VolleySingleton.getInstance().addToRequestQueue(jsonObjReq,
+                "xiifwat");
 
+        // Cancelling request
+        // ApplicationController.getInstance().getRequestQueue().cancelAll(tag_json_obj);
     }
 }

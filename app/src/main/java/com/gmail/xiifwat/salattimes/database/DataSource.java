@@ -65,7 +65,7 @@ public class DataSource {
 
     // ---- if there is no location in the table (app launched for the first time)
     // ---- insert default location
-    public void insertToLocation() {
+    public void setDefaultLocation() {
 
         Cursor cursor = database.query(DbContract.LocationEntry.TABLE_NAME,
                 null, null, null, null, null, null);
