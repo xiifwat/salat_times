@@ -7,6 +7,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.gmail.xiifwat.salattimes.R;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class VolleySingleton extends Application { // this is the volley singleton class
 
@@ -22,6 +25,13 @@ public class VolleySingleton extends Application { // this is the volley singlet
 	public void onCreate() {
 		super.onCreate();
 		mInstance = this;
+
+		CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+				.setDefaultFontPath("fonts/Dodgv2.ttf")
+				.setFontAttrId(R.attr.fontPath)
+				.addCustomStyle(TextField.class, R.attr.textFieldStyle)
+				.build()
+		);
 	}
 
 	public static synchronized VolleySingleton getInstance() {

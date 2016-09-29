@@ -1,6 +1,7 @@
 package com.gmail.xiifwat.salattimes.ui;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -24,6 +25,8 @@ import com.gmail.xiifwat.salattimes.library.VolleySingleton;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -153,5 +156,10 @@ public class MainActivity extends AppCompatActivity {
     private void showSnackbar(String msg) {
         Snackbar.make(findViewById(R.id.content_frame), msg,
                 Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 }
